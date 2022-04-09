@@ -62,7 +62,7 @@ mvn test
 ```
 ##
 ## Notes
-1. You can add more coupons in code like:
+1. You can add more coupons in Deliveroo.setup like:
 ```java
 // code, discount, minW, maxW, minD, maxD
 couponService.registerCoupon( new Coupon("OFR001", 10, 70, 200, 0, 199) )
