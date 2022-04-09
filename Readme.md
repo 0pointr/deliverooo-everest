@@ -1,6 +1,6 @@
 # Deliverooo
 
-Deliverooo is a console app for estimating package delivery cost and time.
+Deliverooo is a console app for for estimating package delivery cost and time.
 
 
 ## Running
@@ -15,7 +15,43 @@ mvn spring-boot:run
 mvn clean package spring-boot:repackage
 java -jar target/deliveroo-0.0.1-SNAPSHOT.jar
 ```
-Add an empty newline  after input lines to start processing.
+
+### Input Examples
+Remember to add an empty newline  after input lines to start processing.
+
+Input 1
+```bash
+100 3
+PKG1 5 5 OFR001
+PKG2 15 5 OFR002
+PKG3 10 100 OFR003
+2 70 200
+```
+Output 1
+```bash
+PKG1 0.0 175.00 0.07
+PKG2 0.0 275.00 0.07
+PKG3 35.0 665.00 1.43
+```
+Input 2
+```bash
+100 5
+PKG1 50 30 OFR001
+PKG2 75 125 OFR002
+PKG3 175 100 OFR003
+PKG4 110 60 OFR003
+PKG5 155 95 NA
+2 70 200
+```
+Output 2
+```bash
+PKG1 0.0 750.00 4.00
+PKG2 0.0 1475.00 1.79
+PKG3 0.0 2350.00 1.43
+PKG4 75.0 1425.00 0.86
+PKG5 0.0 2125.00 4.21
+```
+
 ##
 
 ## Test
