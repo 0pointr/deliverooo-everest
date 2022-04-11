@@ -73,7 +73,7 @@ public class SimpleDeliveryETAService implements IDeliveryETAService{
 			this.maxDistance = 0;
 			if (orders.size() > 0) {
 				this.maxDistance = orders.stream()
-										.max((o1, o2) -> o1.getPkg().getDistance().compareTo(o1.getPkg().getDistance()))
+										.max((o1, o2) -> o1.getPkg().getDistance().compareTo(o2.getPkg().getDistance()))
 										.get().getPkg().getDistance();
 			}
 		}
