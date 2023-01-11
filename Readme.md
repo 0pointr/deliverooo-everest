@@ -2,6 +2,7 @@
 
 Deliverooo is a console app for for estimating package delivery cost and time.
 
+See [Change Log](Changelog.md)
 
 ## Running
 
@@ -79,11 +80,5 @@ You can now add coupons directly in /src/main/resources/coupons.json like follow
 ```
 
 ~~You can add more coupons in Deliveroo.setup like:~~
-```java
-// code, discount, minW, maxW, minD, maxD
-couponService.registerCoupon( new Coupon("OFR001", 10, 70, 200, 0, 199) )
-			.registerCoupon( new Coupon("OFR002", 7, 100, 250, 50, 150) )
-			.registerCoupon( new Coupon("OFR003", 5, 10, 150, 50, 250) );
-```
 
 2. Tests are only written for cost, discount and ETA calculations and input validations.
