@@ -13,7 +13,7 @@ mvn spring-boot:run
 
 ```bash
 mvn clean package spring-boot:repackage
-java -jar target/deliveroo-0.0.1-SNAPSHOT.jar
+java -jar target/deliveroo-0.0.2-SNAPSHOT.jar
 ```
 
 ### Input Examples
@@ -62,13 +62,28 @@ mvn test
 ```
 ##
 ## Notes
-1. You can add more coupons in Deliveroo.setup like:
+1. 
+
+#### UPDATE:
+You can now add coupons directly in /src/main/resources/coupons.json like following:
+
+```json
+{
+	"code":"OFR001",
+	"discount":10,
+	"minWeight":70,
+	"maxWeight":200,
+	"minDistance":0,
+	"maxDistance":199
+},
+```
+
+~~You can add more coupons in Deliveroo.setup like:~~
 ```java
 // code, discount, minW, maxW, minD, maxD
 couponService.registerCoupon( new Coupon("OFR001", 10, 70, 200, 0, 199) )
 			.registerCoupon( new Coupon("OFR002", 7, 100, 250, 50, 150) )
 			.registerCoupon( new Coupon("OFR003", 5, 10, 150, 50, 250) );
 ```
-2. Tests are only written for cost and discount calculations.
 
-
+2. Tests are only written for cost, discount and ETA calculations and input validations.
