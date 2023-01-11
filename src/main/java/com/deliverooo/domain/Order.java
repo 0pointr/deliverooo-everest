@@ -6,7 +6,7 @@ public class Order {
 	private Coupon coupon;
 	private double discount;
 	private double cost;
-	private double etaMinutes;
+	private double etaHours;
 	private String couponCode;
 	
 	public Order(Package pkg, String couponCode) {
@@ -25,7 +25,7 @@ public class Order {
 		super();
 		this.pkg = pkg;
 		this.coupon = coupon;
-		this.etaMinutes = etaMinutes;
+		this.etaHours = etaMinutes;
 	}
 
 	public Package getPkg() {
@@ -43,11 +43,11 @@ public class Order {
 	public void setCoupon(Coupon coupon) {
 		this.coupon = coupon;
 	}
-	public double getEtaMinutes() {
-		return etaMinutes;
+	public double getEtaHours() {
+		return etaHours;
 	}
-	public void setEtaMinutes(double eta) {
-		this.etaMinutes = eta;
+	public void setEtaHours(double eta) {
+		this.etaHours = eta;
 	}
 	
 	public double getDiscount() {

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.deliverooo.domain.Order;
+import com.deliverooo.util.Util;
 
 @Service("SimpleDeliveryETAService")
 public class SimpleDeliveryETAService implements IDeliveryETAService{
@@ -48,8 +49,9 @@ public class SimpleDeliveryETAService implements IDeliveryETAService{
 			Map.Entry<Integer, Double> minLeadTimeVehicle = leadTimes.entrySet().stream().min((e1,e2) -> e1.getValue().compareTo(e2.getValue())).get();
 			double deliveryEndETA = 0d;
 			for (Order order : consignment.getOrders()) {
-				order.setEtaMinutes(minLeadTimeVehicle.getValue() + ((double)order.getPkg().getDistance() / vehicleMaxSpeed));
-				deliveryEndETA = Math.max(deliveryEndETA, order.getEtaMinutes());
+				Double etaHours = minLeadTimeVehicle.getValue() + ((double)order.getPkg().getDistance() / vehicleMaxSpeed);
+				order.setEtaHours(Util.round(2, etaHours));
+				deliveryEndETA = Math.max(deliveryEndETA, order.getEtaHours());
 			}
 			
 			leadTimes.put(minLeadTimeVehicle.getKey(), deliveryEndETA*2);

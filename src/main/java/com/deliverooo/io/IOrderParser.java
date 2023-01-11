@@ -1,10 +1,10 @@
-package com.deliverooo.service;
+package com.deliverooo.io;
 
 import com.deliverooo.domain.Order;
 import com.deliverooo.exception.UnrecognisedOrderFormatException;
 
 public interface IOrderParser {
 
-	public Order parse(String line) throws UnrecognisedOrderFormatException;
+	public Order parse(String line, String delimiter) throws UnrecognisedOrderFormatException;
 	
 }
