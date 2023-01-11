@@ -38,10 +38,10 @@ public class Deliveroo implements CommandLineRunner {
 	private final Logger logger = LoggerFactory.getLogger(Deliveroo.class);
 
 	@Value("${test:false}")
-	boolean test;
+	private boolean test;
 	
 	@Value("${couponDataFile:/coupons.json}")
-	String couponDataFile;
+	private String couponDataFile;
 	
 	@Autowired
 	private IInputProcessor inputProcessor;
