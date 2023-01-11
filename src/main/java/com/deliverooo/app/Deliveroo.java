@@ -1,5 +1,7 @@
 package com.deliverooo.app;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.List;
@@ -23,16 +25,23 @@ import com.deliverooo.io.ProcessedInput;
 import com.deliverooo.service.CouponService;
 import com.deliverooo.service.IDeliveryCostCalculator;
 import com.deliverooo.service.IDeliveryETAService;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.deliverooo")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:/application.properties")
 public class Deliveroo implements CommandLineRunner {
 
 	private final Logger logger = LoggerFactory.getLogger(Deliveroo.class);
 
 	@Value("${test:false}")
 	boolean test;
+	
+	@Value("${couponDataFile:/coupons.json}")
+	String couponDataFile;
 	
 	@Autowired
 	private IInputProcessor inputProcessor;
@@ -49,8 +58,12 @@ public class Deliveroo implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		
-		setup();
+		try {
+			setup();
+		} catch (Exception ex) {
+			logger.error("Error whie setup", ex);
+			return;
+		}
 		
 		if (test) return;
 		
@@ -91,11 +104,14 @@ public class Deliveroo implements CommandLineRunner {
 		SpringApplication.run(Deliveroo.class, args);
 	}
 
-	private void setup() {
+	private void setup() throws StreamReadException, DatabindException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		List<Coupon> coupons = mapper.readValue(this.getClass().getResourceAsStream(couponDataFile), new TypeReference<List<Coupon>>(){});
+		coupons.stream().forEach(c -> couponService.registerCoupon(c));
 		
-		couponService.registerCoupon( new Coupon("OFR001", 10, 70, 200, 0, 199) )	// code, discount, minW, maxW, minD, maxD
-					 .registerCoupon( new Coupon("OFR002", 7, 100, 250, 50, 150) )
-					 .registerCoupon( new Coupon("OFR003", 5, 10, 150, 50, 250) );
+//		couponService.registerCoupon( new Coupon("OFR001", 10, 70, 200, 0, 199) )	// code, discount, minW, maxW, minD, maxD
+//					 .registerCoupon( new Coupon("OFR002", 7, 100, 250, 50, 150) )
+//					 .registerCoupon( new Coupon("OFR003", 5, 10, 150, 50, 250) );
 	}
 
 	

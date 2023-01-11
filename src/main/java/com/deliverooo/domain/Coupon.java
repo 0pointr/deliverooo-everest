@@ -9,6 +9,7 @@ public class Coupon {
 	private int minDistance;
 	private int maxDistance;
 	
+	public Coupon() {}
 	public Coupon(String code, double discount, int minWeight, int maxWeight, int minDistance, int maxDistance) {
 		super();
 		this.code = code;
@@ -82,6 +83,12 @@ public class Coupon {
 		} else if (!code.equals(other.code))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Coupon [code=" + code + ", discount=" + discount + ", minWeight=" + minWeight + ", maxWeight="
+				+ maxWeight + ", minDistance=" + minDistance + ", maxDistance=" + maxDistance + "]";
 	}
 	
 	

@@ -160,7 +160,6 @@ public class Tests {
 									.sorted(Comparator.comparing(Order::getPackageName))
 									.collect(Collectors.toList());
 		// notice the answers are rounded to 2 decimal places,
-		// not truncated as given in the problem statement.
 		Double[] expectedEta = new Double[] {4.01, 1.79, 1.43, 0.86, 4.22};
 		IntStream.range(0, ordersWithETA.size())
 		.forEach(i -> {

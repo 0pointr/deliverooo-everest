@@ -47,6 +47,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -55,8 +61,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-			    	<mainClass>com.deliverooo.app.Deliveroo</mainClass>
-			    </configuration>
+					<mainClass>com.deliverooo.app.Deliveroo</mainClass>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -70,7 +76,7 @@
 			</plugin>
 
 		</plugins>
-		
+
 	</build>
 
 </project>
