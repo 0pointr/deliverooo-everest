@@ -54,6 +54,7 @@ public class Deliveroo implements CommandLineRunner {
 	private IDeliveryCostCalculator costService;
 
 	@Autowired
+	@Qualifier("SimpleDeliveryETAService")
 	private IDeliveryETAService etaService;
 
 	@Override

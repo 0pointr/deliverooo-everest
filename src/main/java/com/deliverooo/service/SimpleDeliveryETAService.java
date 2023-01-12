@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import org.assertj.core.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.deliverooo.domain.Order;
+import com.deliverooo.domain.Package;
 import com.deliverooo.util.Util;
 
 @Service("SimpleDeliveryETAService")
@@ -20,6 +23,11 @@ public class SimpleDeliveryETAService implements IDeliveryETAService{
 
 	private final Logger logger = LoggerFactory.getLogger(SimpleDeliveryETAService.class);
 	
+	/**
+	 * Creates O(2^orders.size) combinations 
+	 * and checks which of them come first given the criteria
+	 * Time O(2^n), Space O(2^n)
+	 */
 	@Override
 	public List<Order> getEstimates(int vehicleCount, int maxWeightPerVehicle,
 										   int vehicleMaxSpeed, List<Order> ords) {
@@ -37,10 +45,11 @@ public class SimpleDeliveryETAService implements IDeliveryETAService{
 			List<OrderGroup> combinations = createCombinations(orders, maxWeightPerVehicle);
 			OrderGroup consignment = combinations.stream()
 									.sorted(Comparator.comparing(OrderGroup::getSize)
-													  .thenComparing(OrderGroup::getTotalWeight)
-													  .thenComparing(OrderGroup::getMaxDistance).reversed())
+													  .thenComparing(OrderGroup::getTotalWeight).reversed()
+													  .thenComparing(o -> ((o.getMaxDistance() / (double)maxWeightPerVehicle))))
 									.findFirst()
 									.get();
+			
 			logger.info("Consignment number:" + consignNumber++
 					  + (" weight:" + consignment.totalWeight)
 					  + (" items:" + consignment.getOrders().stream().map(o -> o.getPackageName()).collect(Collectors.joining(",")))

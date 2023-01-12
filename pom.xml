@@ -62,6 +62,9 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<mainClass>com.deliverooo.app.Deliveroo</mainClass>
+					<jvmArguments>
+                        -agentlib:jdwp=transport=dt_socket,address=9898,server=y,suspend=n
+                    </jvmArguments>
 				</configuration>
 			</plugin>
 

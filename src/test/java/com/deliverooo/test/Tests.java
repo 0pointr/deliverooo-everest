@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.deliverooo.app.Deliveroo;
@@ -43,7 +44,12 @@ public class Tests {
 	IDeliveryCostCalculator costCalculator;
 	
 	@Autowired
-	IDeliveryETAService etaService;
+	@Qualifier("OptimizedDeliveryETAService")
+	private IDeliveryETAService optimizedEtaService;
+	
+	@Autowired
+	@Qualifier("SimpleDeliveryETAService")
+	private IDeliveryETAService simpleEtaService;
 	
 	@Autowired
 	IInputProcessor inputProcessor;
@@ -125,7 +131,7 @@ public class Tests {
 	}
 	
 	@Test
-	void etaTest1() throws InvalidInputException {
+	void simpleEtaServiceTest1() throws InvalidInputException {
 		
 		String inputStr = "100 3\n" + 
 				"PKG1 5 5 OFR001\n" + 
@@ -133,7 +139,7 @@ public class Tests {
 				"PKG3 10 100 OFR003\n" + 
 				"2 70 200";
 		
-		List<Order> ordersWithETA = getOrderEtasFromInputString(inputStr)
+		List<Order> ordersWithETA = getOrderEtasFromInputString(simpleEtaService, inputStr)
 									.stream()
 									.sorted(Comparator.comparing(Order::getPackageName))
 									.collect(Collectors.toList());
@@ -145,7 +151,7 @@ public class Tests {
 	}
 	
 	@Test
-	void etaTest2() throws InvalidInputException {
+	void simpleEtaServiceTest2() throws InvalidInputException {
 		
 		String inputStr = "100 5\n" + 
 				"PKG1 50 30 OFR001\n" + 
@@ -155,7 +161,7 @@ public class Tests {
 				"PKG5 155 95 NA\n" + 
 				"2 70 200";
 		
-		List<Order> ordersWithETA = getOrderEtasFromInputString(inputStr)
+		List<Order> ordersWithETA = getOrderEtasFromInputString(simpleEtaService, inputStr)
 									.stream()
 									.sorted(Comparator.comparing(Order::getPackageName))
 									.collect(Collectors.toList());
@@ -167,7 +173,100 @@ public class Tests {
 		});
 	}
 	
-	private List<Order> getOrderEtasFromInputString(String inputStr) throws InvalidInputException {
+	@Test
+	void simpleEtaServiceTest3() throws InvalidInputException {
+		
+		String inputStr = "100 7\n" + 
+				"PKG1 1 30 OFR001\n" + 
+				"PKG2 1 30 OFR002\n" + 
+				"PKG3 1 30 OFR003\n" + 
+				"PKG4 1 25 OFR001\n" + 
+				"PKG5 1 25 OFR002\n" + 
+				"PKG6 1 25 OFR003\n" + 
+				"PKG7 3 30 OFR003\n" + 
+				"1 70 3";
+		
+		List<Order> ordersWithETA = getOrderEtasFromInputString(simpleEtaService, inputStr)
+									.stream()
+									.sorted(Comparator.comparing(Order::getPackageName))
+									.collect(Collectors.toList());
+		// notice the answers are rounded to 2 decimal places,
+		Double[] expectedEta = new Double[] {1.15, 1.15, 1.15, 0.36, 0.36, 0.36, 2.73};
+		IntStream.range(0, ordersWithETA.size())
+		.forEach(i -> {
+			assertEquals(expectedEta[i], ordersWithETA.get(i).getEtaHours(), 0.01);
+		});
+	}
+	
+	@Test
+	void optimizedEtaTest1() throws InvalidInputException {
+		
+		String inputStr = "100 3\n" + 
+				"PKG1 5 5 OFR001\n" + 
+				"PKG2 15 5 OFR002\n" + 
+				"PKG3 10 100 OFR003\n" + 
+				"2 70 200";
+		
+		List<Order> ordersWithETA = getOrderEtasFromInputString(optimizedEtaService, inputStr)
+									.stream()
+									.sorted(Comparator.comparing(Order::getPackageName))
+									.collect(Collectors.toList());
+		Double[] expectedEta = new Double[] {.07, .07, 1.43};
+		IntStream.range(0, ordersWithETA.size())
+		.forEach(i -> {
+			assertEquals(expectedEta[i], ordersWithETA.get(i).getEtaHours(), 0.01);
+		});
+	}
+	
+	@Test
+	void optimizedEtaTest2() throws InvalidInputException {
+		
+		String inputStr = "100 5\n" + 
+				"PKG1 50 30 OFR001\n" + 
+				"PKG2 75 125 OFR002\n" + 
+				"PKG3 175 100 OFR003\n" + 
+				"PKG4 110 60 OFR003\n" + 
+				"PKG5 155 95 NA\n" + 
+				"2 70 200";
+		
+		List<Order> ordersWithETA = getOrderEtasFromInputString(optimizedEtaService, inputStr)
+									.stream()
+									.sorted(Comparator.comparing(Order::getPackageName))
+									.collect(Collectors.toList());
+		// notice the answers are rounded to 2 decimal places,
+		Double[] expectedEta = new Double[] {4.01, 1.79, 1.43, 0.86, 4.22};
+		IntStream.range(0, ordersWithETA.size())
+		.forEach(i -> {
+			assertEquals(expectedEta[i], ordersWithETA.get(i).getEtaHours(), 0.001);
+		});
+	}
+	
+	@Test
+	void optimizedEtaServiceTest3() throws InvalidInputException {
+		
+		String inputStr = "100 7\n" + 
+				"PKG1 1 30 OFR001\n" + 
+				"PKG2 1 30 OFR002\n" + 
+				"PKG3 1 30 OFR003\n" + 
+				"PKG4 1 25 OFR001\n" + 
+				"PKG5 1 25 OFR002\n" + 
+				"PKG6 1 25 OFR003\n" + 
+				"PKG7 3 30 OFR003\n" + 
+				"1 70 3";
+		
+		List<Order> ordersWithETA = getOrderEtasFromInputString(optimizedEtaService, inputStr)
+									.stream()
+									.sorted(Comparator.comparing(Order::getPackageName))
+									.collect(Collectors.toList());
+		// notice the answers are rounded to 2 decimal places,
+		Double[] expectedEta = new Double[] {1.15, 1.15, 1.15, 0.36, 0.36, 0.36, 2.73};
+		IntStream.range(0, ordersWithETA.size())
+		.forEach(i -> {
+			assertEquals(expectedEta[i], ordersWithETA.get(i).getEtaHours(), 0.001);
+		});
+	}
+	
+	private List<Order> getOrderEtasFromInputString(IDeliveryETAService etaService, String inputStr) throws InvalidInputException {
 		ProcessedInput input = inputProcessor.process(new ByteArrayInputStream(inputStr.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8); 
 		
 		Double baseCost = input.getBaseCost();
