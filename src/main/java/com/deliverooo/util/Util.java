@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 public class Util {
 
-	private static Logger l = LoggerFactory.getLogger(Util.class);
-	
 	public static Double round(int places, Double value) {
 		if (places < 0) throw new IllegalArgumentException();
 
